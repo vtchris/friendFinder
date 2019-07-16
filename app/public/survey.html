@@ -1,12 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Friend Finder - Survey</title>
+    <!-- BOOTSTRAP -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery.js"></script>
 </head>
+
 <body>
-    
+    <form>
+        <div class="form-group">
+            <ul id="survey-ul">
+
+            </ul>
+
+        </div>
+        <button id='submit-btn'>Submit</button>
+    </form>
+
+    <script type="text/javascript">
+        let surveyUl = document.getElementById('survey-ul');
+        let questions = ['I am outgoing', 'I like spending time outdoors', 'I like watching movies'];
+
+        for (let i = 0; i < questions.length; i++) {
+            let li = document.createElement('li');
+            let select = document.createElement('select');
+            select.setAttribute('id', 'q' + parseInt(i + 1));
+            let firstOption = document.createElement('option');
+            firstOption.text = 'Select an Option';
+            select.appendChild(firstOption);
+
+            for (let j = 5; j > 0; j--) {
+                let option = document.createElement('option');
+                option.value = j;
+                if (j === 5) {
+                    option.text = j + ' (Strongly Agree)';
+                } else if (j === 1) {
+                    option.text = j + ' (Strongly Disagree)';
+                } else {
+                    option.text = j;
+                }
+                select.add(option);
+            }
+
+            li.appendChild(select);
+            surveyUl.appendChild(li);
+        }
+
+        $('#submit-btn').on('click', function (e) {
+            e.preventDefault()
+
+            var currentURL = window.location.origin;
+            let friend = {}
+
+            let answers = $('select')
+
+            for (let i = 0; i < answers.length; i++) {
+                friend[answers[i].id] = answers[i].value;
+            }
+
+            //$.post(currentURL + "/api/friends", friend, function (data) {
+            $.post("/api/friends", friend, function (data) {
+                console.log("bye")
+            })
+
+            console.log(friend)
+
+        })
+
+    </script>
 </body>
+
 </html>
