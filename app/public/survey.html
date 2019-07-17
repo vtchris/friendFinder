@@ -12,25 +12,65 @@
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .form {
+            width: 500px;
+            margin: auto;
+        }
+
+        label {
+            display: block;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+    </style>
 </head>
 
 <body>
-    <form>
-        <div class="form-group">
-            <ul id="survey-ul">
+    <div id="wrapper">
 
-            </ul>
+        <form class="form">
+            <h2>Tell Us A Little About Yourself!</h2>
+            <hr>
+            <div class="form-group">
+                <input id="name-txt" class="form-control" type="text" placeholder="Name">
+                <ul id="survey-ul">
 
+                </ul>
+
+            </div>
+            <button id='submit-btn' class="btn btn-primary btn-lg">Submit</button>
+        </form>
+
+        <div class="card">
+                <img id="friend-img" class="card-img-top" src="" alt="Card image cap">
+                <div class="card-body">
+                        <h4 id="friend-header" class="card-title"></h4>
+                </div>
         </div>
-        <button id='submit-btn'>Submit</button>
-    </form>
+    </div>
 
     <script type="text/javascript">
-        let surveyUl = document.getElementById('survey-ul');
-        let questions = ['I am outgoing', 'I like spending time outdoors', 'I like watching movies'];
+    let $friendImg = $("#friend-img");
+        let $surveyUl = $("#survey-ul");
+        let $friendHeader = $("#friend-header");
+        let questions = ['I am outgoing', 'I like spending time outdoors', 'I like watching movies', 'I have more energy in the morning', 'I like pets (dogs and cats)', 'I prefer to text rather than call', 'I like going to concerts', 'I like to cook', 'I like to play sports', 'I like to joke around'];
 
         for (let i = 0; i < questions.length; i++) {
-            let li = document.createElement('li');
+            //let li = document.createElement('li');
+            let li = $("<li>")
+            let label = $("<label>");
+            label.text(questions[i]);
+            label.appendTo(li)
+            //li.append(label)
+
             let select = document.createElement('select');
             select.setAttribute('id', 'q' + parseInt(i + 1));
             let firstOption = document.createElement('option');
@@ -50,28 +90,35 @@
                 select.add(option);
             }
 
-            li.appendChild(select);
-            surveyUl.appendChild(li);
+            li.append(select);
+            $surveyUl.append(li);
         }
 
         $('#submit-btn').on('click', function (e) {
             e.preventDefault()
 
             var currentURL = window.location.origin;
-            let friend = {}
+            let friend = {};
+            let responses = [];
 
             let answers = $('select')
 
             for (let i = 0; i < answers.length; i++) {
-                friend[answers[i].id] = answers[i].value;
+                responses.push(parseInt(answers[i].value));
             }
+            friend.name = $('#name-txt').val();
+            friend.responses = responses;
 
             //$.post(currentURL + "/api/friends", friend, function (data) {
-            $.post("/api/friends", friend, function (data) {
+            $.post("/api/friends", friend, function (res) {
                 console.log("bye")
+                console.log(res)
+
+                $friendImg.attr("src",res.image);
+                $friendHeader.text(res.name);
             })
 
-            console.log(friend)
+
 
         })
 
