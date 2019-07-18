@@ -7,24 +7,89 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Friend Finder - Home</title>
 
+    <!-- COOL FONTS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+        integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
     <!-- BOOTSRAP -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery.js"></script>
+
+    <style>
+        body {
+            height: 100%;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        #wrapper {
+            display: block;
+            margin: 0 auto -123px;
+            min-height: 100%;        
+            padding-bottom: 100px;
+            padding-top: 100px;
+        }
+
+        #pageFooter {
+            background-color: #1e2e3d;
+            color: grey;
+            padding-bottom: 10px;
+        }
+
+        @media screen and (max-width:667px) {                    
+            .display-5 {
+                font-size: 10px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <div class="jumbotron">
-        <h1 class="display-4">Friend Finder!</h1>
-        <hr class="my-2">
-        <p class="lead">Answer a few basic questions.</p>
-        <p class="lead">Then find the friend with the greatest compatibility!</p>
-        <a href="/survey"><button id="survey-btn" class="btn btn-primary btn-lg">SURVEY</button></a>
+    <div id="wrapper">
+        <div class="jumbotron">
+            <h1 class="display-4">Friend Finder!</h1>
+            <hr class="my-2">
+            <p class="lead">Answer a few basic questions.</p>
+            <p class="lead">Then find the friend with the greatest compatibility!</p>
+            <a href="/survey"><button id="survey-btn" class="btn btn-primary btn-lg">SURVEY</button></a>
 
+        </div>
+        <a href="/api/friends">API Friends Link</a>
     </div>
-    <a href="/api/friends">API Friends Link</a>
+    <!-- FOOTER START-->
+    <footer id="pageFooter" class="bg-dark text-center">
+        <ul>
+            <li class="list-inline-item">
+                <h4 class="display-5 mt-2">JAVASCRIPT &nbsp; &#8226; &nbsp;</h4>
+            </li>
+            <li class="list-inline-item">
+                <h4 class="display-5 mt-2">JQUERY &nbsp; &#8226; &nbsp;</h4>
+            </li>
+            <li class="list-inline-item">
+                <h4 class="display-5 mt-2">NodeJS/Express &nbsp; &#8226; &nbsp;</h4>
+            </li>
+            <li class="list-inline-item">
+                <h4 class="display-5 mt-2">HTML/CSS &nbsp; &#8226; &nbsp;</h4>
+            </li>
+            <li class="list-inline-item">
+                <h4 class="display-5 mt-2">BOOTSTRAP</h4>
+            </li>
+        </ul>
+
+        <a href="https://vtchris.github.io/portfolio/" target="_blank" class="btn btn-secondary mb-2 mr-4"><span
+                class="fa fa-address-card pr-2"></span>Portfolio: Chris Ross</a>
+        <a href="https://github.com/vtchris/" target="_blank" class="fab fa-github text-muted mr-4"
+            style="font-size:38px;"></a>
+        <a href="https://www.linkedin.com/in/chrisross2357/" target="_blank" class="fab fa-linkedin text-muted"
+            style="font-size:38px;"></a>
+
+    </footer>
+    <!-- FOOTER END-->
 </body>
 
 </html>
