@@ -12,23 +12,36 @@
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery.js"></script>
+
+    <!-- BOOTSTRAP JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <style>
         body {
             margin: 0;
             padding: 0;
         }
 
+        label {
+            display: block;
+        }       
+        ul {
+            list-style-type: none;
+        }
         .form {
             width: 500px;
             margin: auto;
         }
 
-        label {
-            display: block;
+        .modal-backdrop {
+            opacity: 0.4 !important;
         }
-
-        ul {
-            list-style-type: none;
+        .office-img{
+            height: 225px;
+            width: 200px;
+        }
+        .friend-img {
+            height: 225px;
+            width: auto;
         }
     </style>
 </head>
@@ -38,87 +51,135 @@
 
         <form class="form">
             <h2>Tell Us A Little About Yourself!</h2>
-            <hr>
+           
             <div class="form-group">
-                <input id="name-txt" class="form-control" type="text" placeholder="Name">
+                <input id="name-txt" class="form-control mb-2" type="text" placeholder="Name">
+                <input id="photo-txt" class="form-control mb-2" type="text" placeholder="Image link">
+                <!-- Survey Questions placed here-->
                 <ul id="survey-ul">
-
                 </ul>
-
             </div>
             <button id='submit-btn' class="btn btn-primary btn-lg">Submit</button>
         </form>
 
-        <div class="card">
-                <img id="friend-img" class="card-img-top" src="" alt="Card image cap">
-                <div class="card-body">
-                        <h4 id="friend-header" class="card-title"></h4>
+        <!-- Modal -->
+        <div class="modal" id="match-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Best Match</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <h2 id="friend-header"></h2>
+                        <img id="friend-img" src="" alt="Match Image">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
+            </div>
         </div>
+        <!-- Modal End -->
+
     </div>
 
     <script type="text/javascript">
-    let $friendImg = $("#friend-img");
-        let $surveyUl = $("#survey-ul");
+
+        //jQuery HTML elements
         let $friendHeader = $("#friend-header");
+        let $friendImg = $("#friend-img");
+        let $modal = $("#match-modal");
+        let $surveyUl = $("#survey-ul");
+        
+        //Survey questions
         let questions = ['I am outgoing', 'I like spending time outdoors', 'I like watching movies', 'I have more energy in the morning', 'I like pets (dogs and cats)', 'I prefer to text rather than call', 'I like going to concerts', 'I like to cook', 'I like to play sports', 'I like to joke around'];
 
+        //Add questions to HTML
         for (let i = 0; i < questions.length; i++) {
-            //let li = document.createElement('li');
-            let li = $("<li>")
+           
+            //Create list item (li) for each survey question
+            let li = $("<li>");
             let label = $("<label>");
             label.text(questions[i]);
-            label.appendTo(li)
-            //li.append(label)
+            label.appendTo(li);
+                        
+            let select = $("<select>");            
+            select.attr("id","q" + parseInt(i + 1));
 
-            let select = document.createElement('select');
-            select.setAttribute('id', 'q' + parseInt(i + 1));
-            let firstOption = document.createElement('option');
-            firstOption.text = 'Select an Option';
-            select.appendChild(firstOption);
+            let firstOption = $("<option>");
+            firstOption.text('Select an Option');
+            select.append(firstOption);
 
             for (let j = 5; j > 0; j--) {
-                let option = document.createElement('option');
-                option.value = j;
+                let option = $("<option>");
+                option.val(j);
                 if (j === 5) {
-                    option.text = j + ' (Strongly Agree)';
+                    option.text(j + " (Strongly Agree)");
                 } else if (j === 1) {
-                    option.text = j + ' (Strongly Disagree)';
+                    option.text(j + " (Strongly Disagree)");
                 } else {
-                    option.text = j;
+                    option.text(j);
                 }
-                select.add(option);
+                select.append(option);
             }
 
             li.append(select);
             $surveyUl.append(li);
         }
 
-        $('#submit-btn').on('click', function (e) {
-            e.preventDefault()
+        //Set default field
+        $("#name-txt").focus()
 
-            var currentURL = window.location.origin;
+        $('#submit-btn').on('click', function (e) {
+            e.preventDefault();
+
+            //var currentURL = window.location.origin;
             let friend = {};
             let responses = [];
 
-            let answers = $('select')
-
-            for (let i = 0; i < answers.length; i++) {
+            friend.name = $('#name-txt').val();
+            friend.photo = $("#photo-txt").val();
+            let answers = $('select');
+           
+            //Get the answers for each question
+            for (let i = 0; i < answers.length; i++) {               
                 responses.push(parseInt(answers[i].value));
             }
-            friend.name = $('#name-txt').val();
-            friend.responses = responses;
-
-            //$.post(currentURL + "/api/friends", friend, function (data) {
-            $.post("/api/friends", friend, function (res) {
-                console.log("bye")
-                console.log(res)
-
-                $friendImg.attr("src",res.image);
-                $friendHeader.text(res.name);
+            //Validate that user has entered a name and each question is answered        
+            if(friend.name === null || friend.name ===""){
+                alert("Please Enter Your Name.");
+            }else if(isNaN(responses.reduce((t,v) => t += v ))){
+                alert("Please Select An Answer For Each Question.");             
+            }else{
+               
+                friend.responses = responses;
+               
+                $.post("/api/friends", friend, function (res) {
+                
+                if (res) {
+                    //Display response to user
+                    if(res.photo){
+                        $friendImg.removeClass("office-img");
+                        $friendImg.addClass("friend-img");
+                        $friendImg.attr("src", res.photo);
+                    }else if(res.image){
+                        $friendImg.removeClass("friend-img");
+                        $friendImg.addClass("office-img");
+                        $friendImg.attr("src", res.image);
+                    }
+                    
+                    
+                    $friendHeader.text(res.name);
+                    $modal.modal("show");
+                }
             })
-
-
+            }
+            
+            //console.log(responses);
 
         })
 

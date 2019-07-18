@@ -3,9 +3,11 @@ let friends = require('../data/friends')
 module.exports = function (app) {
 
     app.get('/api/friends', function (req, res) {
-
+        res.json(friends);
     })
     app.post('/api/friends', function (req, res) {
+
+        //console.log(req.body)
 
         let friend = req.body;
 
@@ -13,7 +15,7 @@ module.exports = function (app) {
             friends.push(friend);
             res.json(false);
         } else {
-            
+
             var bestMatch = null;
             var bestScore = 0;
 
@@ -25,34 +27,23 @@ module.exports = function (app) {
                     matchScore += Math.abs(friends[i].responses[j] - friend.responses[j]);
                 }
 
-                //First time through, set 
+                //First time through, or lower score sets new bestMatch 
                 if (bestMatch === null || matchScore < bestScore) {
                     bestScore = matchScore;
                     bestMatch = friends[i];
-                    // }else if (matchScore < bestScore){
-                    //     bestScore = matchScore;
-                    //     bestMatch = friends[i];
                 }
-
-                // console.log(matchScore)
-                // console.log(friends[i].name)
-                // console.log("---- Next is current -----")
-                // console.log(bestScore)
-                // console.log(bestMatch)
-                // console.log("--------------------------")
 
             }
 
-            console.log("score: " + bestScore)
-            console.log("friend " + bestMatch.name)
+            console.log("score: " + bestScore);
+            console.log("friend " + bestMatch.name);
+
+            //Add current user to friends list
             friends.push(friend);
 
-           
         }
-        // // console.log(req.body)
-        // // console.log(friends)
-        // console.log("hi")
-        // console.log(true)
+        
+        //Return best match
         res.json(bestMatch);
     })
 
