@@ -27,6 +27,10 @@ module.exports = function (app) {
                     matchScore += Math.abs(friends[i].responses[j] - friend.responses[j]);
                 }
 
+                // console.log(matchScore);
+                // console.log(friends[i]);
+                // console.log(friend.responses)
+
                 //First time through, or lower score sets new bestMatch 
                 if (bestMatch === null || matchScore < bestScore) {
                     bestScore = matchScore;
