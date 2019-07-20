@@ -10,6 +10,7 @@ app.use(express.json());
 
 //Get server images
 app.use("/userimages",express.static(__dirname + '/app/data/images/userImages'));
+app.use("/images",express.static(__dirname + '/app/data/images/'));
 
 require("./app/routing/apiRoutes")(app);
 require("./app/routing/htmlRoutes")(app);
